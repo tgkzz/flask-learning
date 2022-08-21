@@ -1,4 +1,14 @@
 from laptop import app
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def basic():
+    return render_template('basic.html')
+
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port='5000')
+    app.run(host='127.0.0.1', port='5000', debug=True)
+

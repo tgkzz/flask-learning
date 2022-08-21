@@ -1,11 +1,23 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, render_template
 from laptop import logger, docs
 from laptop.schemas import LaptopSchema
 from flask_apispec import use_kwargs, marshal_with
 from laptop.models import Laptop
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from laptop.base_view import BaseView
 
 laptops = Blueprint('laptops', __name__)
+
+
+class ListView(BaseView):
+    @marshal_with(LaptopSchema(many=True))
+    def get(self):
+        try:
+            laptops = Laptop.get_list()
+        except Exception as e:
+            logger.warning( f'laptops - read action failed with errors: {e}')
+            return {'message': str(e)}, 400
+        return laptops
 
 
 @laptops.route('/laptops', methods=['GET'])
@@ -80,3 +92,4 @@ docs.register(get_laptops, blueprint='laptops')
 docs.register(add_laptop, blueprint='laptops')
 docs.register(edit_laptop, blueprint='laptops')
 docs.register(delete_laptop, blueprint='laptops')
+ListView.register(laptops, docs, '/main', 'listview')

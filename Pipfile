@@ -11,6 +11,9 @@ passlib = "*"
 bcrypt = "*"
 flask-apispec = "*"
 marshmallow = "*"
+flask-cors = "*"
+cors = "*"
+alembic = "*"
 
 [dev-packages]
 

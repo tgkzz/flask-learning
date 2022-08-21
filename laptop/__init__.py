@@ -8,8 +8,10 @@ from .config import Config
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec import APISpec
 from flask_apispec.extension import FlaskApiSpec
+from flask_cors import CORS
 import logging
 
+# i accidentially found cors package, which looks like hacking tool lmao
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -27,6 +29,9 @@ jwt = JWTManager(app)
 
 docs = FlaskApiSpec()
 
+cors = CORS(resources={r"/*": {"origins": Config.CORS_ALLOWED_ORIGINS}})
+
+
 app.config.update({
     'APISPEC_SPEC': APISpec(
         title='laptops',
@@ -36,10 +41,6 @@ app.config.update({
     ),
     'APISPEC_SWAGGER_URL': '/swagger/'
 })
-
-from .models import *
-
-Base.metadata.create_all(bind=engine)
 
 
 def setup_logger():
